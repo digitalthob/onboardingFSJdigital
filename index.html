@@ -1,0 +1,463 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Makermobil Team-Organisation – Selbstlernkurs</title>
+<style>
+:root {
+  /* Makermobil / LMZ Markenfarben */
+  --druck: #44a1d7;
+  --druck-pastel: #c7e2f2;
+  --grafik: #a82a78;
+  --grafik-pastel: #f3d4e5;
+  --laser: #edab35;
+  --laser-pastel: #fae0c1;
+  --mech: #a92626;
+  --mech-pastel: #f1d3d3;
+  --studio: #ffe566;
+  --studio-pastel: #fff4c1;
+  --textil: #80a22b;
+  --textil-pastel: #d8e3bf;
+
+  /* Abgeleitete UI-Farben */
+  --bg: #fafbfc;
+  --surface: #ffffff;
+  --surface2: #e8ecf0;
+  --accent: var(--druck);
+  --accent2: var(--grafik);
+  --success: var(--textil);
+  --warn: var(--laser);
+  --danger: var(--mech);
+  --text: #1a2332;
+  --textdim: #5a6a7a;
+  --radius: 16px;
+  --font: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  --shadow: 0 2px 12px rgba(68,161,215,.08);
+  --shadow-hover: 0 8px 28px rgba(68,161,215,.15);
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: var(--font);
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+.header {
+  position: sticky; top: 0; z-index: 100;
+  background: rgba(255,255,255,.95);
+  backdrop-filter: blur(12px);
+  border-bottom: 3px solid var(--druck);
+  padding: 12px 24px;
+  display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
+  box-shadow: 0 2px 16px rgba(68,161,215,.1);
+}
+.header h1 { font-size: 1.2em; font-weight: 700; white-space: nowrap; color: var(--text); }
+.header .van { font-size: 1.5em; }
+.progress-bar-wrap {
+  flex: 1; max-width: 400px; height: 8px;
+  background: var(--surface2); border-radius: 99px; overflow: hidden;
+}
+.progress-bar {
+  height: 100%; width: 0%;
+  background: linear-gradient(90deg, var(--druck), var(--grafik), var(--laser));
+  border-radius: 99px; transition: width .5s cubic-bezier(.4,0,.2,1);
+}
+.progress-label { font-size: .85em; color: var(--textdim); white-space: nowrap; font-weight: 600; }
+.lesson-nav {
+  display: flex; gap: 8px; padding: 16px 24px; overflow-x: auto;
+  scrollbar-width: thin; scrollbar-color: var(--druck-pastel) transparent;
+}
+.lesson-nav::-webkit-scrollbar { height: 6px; }
+.lesson-nav::-webkit-scrollbar-thumb { background: var(--druck-pastel); border-radius: 99px; }
+.lesson-pill {
+  display: flex; align-items: center; gap: 8px;
+  padding: 8px 16px; border-radius: 99px;
+  background: var(--surface); border: 2px solid var(--surface2);
+  cursor: pointer; white-space: nowrap; font-size: .9em;
+  transition: all .25s ease; user-select: none;
+  box-shadow: var(--shadow);
+}
+.lesson-pill:hover { border-color: var(--druck); transform: translateY(-2px); box-shadow: var(--shadow-hover); }
+.lesson-pill.active {
+  background: linear-gradient(135deg, var(--druck), var(--grafik));
+  border-color: transparent; font-weight: 600; color: #fff;
+}
+.lesson-pill.active .num { background: rgba(255,255,255,.3); color: #fff; }
+.lesson-pill.done .num { background: var(--textil); color: #fff; }
+.lesson-pill .num {
+  width: 24px; height: 24px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: .8em; font-weight: 700; background: var(--druck-pastel); color: var(--druck);
+  transition: all .25s ease;
+}
+.main { max-width: 900px; margin: 0 auto; padding: 0 24px 80px; }
+.slide { display: none; animation: fadeIn .5s ease; }
+.slide.active { display: block; }
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.card {
+  background: var(--surface); border: 1px solid var(--surface2);
+  border-radius: var(--radius); padding: 28px; margin-bottom: 20px;
+  box-shadow: var(--shadow);
+  border-top: 4px solid var(--druck);
+  transition: box-shadow .3s ease;
+}
+.card:hover { box-shadow: var(--shadow-hover); }
+.card h2 { font-size: 1.5em; margin-bottom: 12px; color: var(--text); }
+.card h3 { font-size: 1.15em; margin: 16px 0 8px; color: var(--druck); }
+.card p { line-height: 1.7; margin-bottom: 10px; color: var(--textdim); }
+.card ul, .card ol { line-height: 1.8; margin-left: 20px; margin-bottom: 12px; color: var(--textdim); }
+.card li { margin-bottom: 4px; }
+.card strong { color: var(--text); }
+table { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: .95em; }
+th { background: var(--druck-pastel); padding: 10px 14px; text-align: left; font-weight: 600; color: var(--text); border-radius: 6px 6px 0 0; }
+td { padding: 10px 14px; border-bottom: 1px solid var(--surface2); color: var(--textdim); }
+tr:nth-child(even) td { background: rgba(199,226,242,.2); }
+.callout { padding: 16px; border-radius: 12px; margin: 16px 0; font-size: .95em; line-height: 1.6; }
+.callout.warn { background: var(--mech-pastel); border-left: 4px solid var(--mech); }
+.callout.info { background: var(--druck-pastel); border-left: 4px solid var(--druck); }
+.callout.tip { background: var(--laser-pastel); border-left: 4px solid var(--laser); }
+.callout.success { background: var(--textil-pastel); border-left: 4px solid var(--textil); }
+.callout strong { color: var(--text); }
+.quiz {
+  background: var(--surface); border: 2px solid var(--surface2);
+  border-radius: var(--radius); padding: 24px; margin: 16px 0;
+  box-shadow: var(--shadow);
+  border-left: 4px solid var(--grafik);
+}
+.quiz .question { font-size: 1.1em; font-weight: 600; margin-bottom: 16px; color: var(--text); }
+.quiz-option {
+  display: flex; align-items: center; gap: 12px;
+  padding: 14px 18px; margin-bottom: 10px;
+  border: 2px solid var(--surface2); border-radius: 12px;
+  cursor: pointer; transition: all .2s ease; user-select: none; color: var(--textdim);
+  background: var(--bg);
+}
+.quiz-option:hover { border-color: var(--druck); background: var(--druck-pastel); }
+.quiz-option.selected { border-color: var(--druck); }
+.quiz-option.correct {
+  border-color: var(--textil); background: var(--textil-pastel);
+  color: var(--text); animation: pop .4s ease;
+}
+.quiz-option.wrong {
+  border-color: var(--mech); background: var(--mech-pastel); color: var(--text);
+}
+.quiz-option .icon { font-size: 1.3em; }
+.quiz-feedback {
+  margin-top: 14px; padding: 14px; border-radius: 10px;
+  font-size: .95em; display: none; animation: fadeIn .3s ease;
+}
+.quiz-feedback.show { display: block; }
+.quiz-feedback.right { background: var(--textil-pastel); color: #2d5016; font-weight: 600; }
+.quiz-feedback.wrong { background: var(--mech-pastel); color: #6b1818; font-weight: 600; }
+@keyframes pop { 0%{transform:scale(1)} 50%{transform:scale(1.03)} 100%{transform:scale(1)} }
+.dnd-area { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 20px 0; }
+.dnd-items { display: flex; flex-direction: column; gap: 10px; }
+.dnd-targets { display: flex; flex-direction: column; gap: 10px; }
+.dnd-item {
+  padding: 12px 16px; background: var(--surface); border: 2px solid var(--surface2);
+  border-radius: 10px; cursor: grab; font-size: .95em; color: var(--text); transition: all .2s ease;
+  box-shadow: var(--shadow);
+}
+.dnd-item:hover { border-color: var(--druck); transform: scale(1.02); box-shadow: var(--shadow-hover); }
+.dnd-item.dragging { opacity: .5; cursor: grabbing; }
+.dnd-target {
+  padding: 14px; min-height: 60px;
+  border: 2px dashed var(--surface2); border-radius: 10px; transition: all .2s ease;
+  display: flex; flex-direction: column; gap: 8px;
+}
+.dnd-target.over { border-color: var(--druck); background: var(--druck-pastel); }
+.dnd-target .label { font-weight: 600; font-size: .9em; color: var(--druck); }
+.dnd-target .items { display: flex; flex-wrap: wrap; gap: 6px; }
+.dnd-target .placed-item {
+  padding: 6px 12px; border-radius: 6px; font-size: .85em;
+  background: var(--surface2); color: var(--text); cursor: pointer;
+  border: 1px solid transparent;
+}
+.dnd-target .placed-item.correct { background: var(--textil-pastel); border-color: var(--textil); }
+.dnd-target .placed-item.wrong { background: var(--mech-pastel); border-color: var(--mech); }
+.dnd-check-btn {
+  grid-column: 1 / -1; padding: 12px; border: none; border-radius: 10px;
+  background: linear-gradient(135deg, var(--druck), var(--grafik));
+  color: #fff; font-weight: 600; cursor: pointer; font-size: 1em; transition: transform .2s ease;
+}
+.dnd-check-btn:hover { transform: scale(1.02); box-shadow: var(--shadow-hover); }
+.checklist { display: flex; flex-direction: column; gap: 10px; margin: 16px 0; }
+.check-item {
+  display: flex; align-items: center; gap: 12px;
+  padding: 12px 16px; border: 2px solid var(--surface2);
+  border-radius: 10px; cursor: pointer; transition: all .2s ease; color: var(--textdim); user-select: none;
+  background: var(--bg);
+}
+.check-item:hover { border-color: var(--druck); background: var(--druck-pastel); }
+.check-item.checked { background: var(--textil-pastel); border-color: var(--textil); color: var(--text); }
+.check-item .box {
+  width: 24px; height: 24px; border: 2px solid var(--surface2);
+  border-radius: 6px; display: flex; align-items: center; justify-content: center;
+  transition: all .2s ease; flex-shrink: 0;
+}
+.check-item.checked .box { background: var(--textil); border-color: var(--textil); }
+.check-item .box::after { content: '✓'; color: #fff; font-weight: 700; font-size: .9em; opacity: 0; transition: opacity .2s; }
+.check-item.checked .box::after { opacity: 1; }
+.nav-buttons { display: flex; justify-content: space-between; align-items: center; margin-top: 24px; gap: 12px; }
+.btn {
+  padding: 12px 28px; border: none; border-radius: 12px;
+  font-size: 1em; font-weight: 600; cursor: pointer; transition: all .25s ease; font-family: var(--font);
+}
+.btn-next { background: linear-gradient(135deg, var(--druck), var(--grafik)); color: #fff; }
+.btn-next:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(68,161,215,.3); }
+.btn-prev { background: var(--surface); color: var(--textdim); border: 2px solid var(--surface2); }
+.btn-prev:hover { border-color: var(--druck); color: var(--druck); }
+.btn:disabled { opacity: .4; cursor: not-allowed; transform: none !important; box-shadow: none !important; }
+.toast {
+  position: fixed; bottom: 24px; left: 50%;
+  transform: translateX(-50%) translateY(100px);
+  background: var(--textil); color: #fff;
+  padding: 14px 28px; border-radius: 99px; font-weight: 600; font-size: .95em;
+  box-shadow: 0 8px 32px rgba(128,162,43,.3);
+  transition: transform .4s cubic-bezier(.4,0,.2,1); z-index: 200;
+}
+.toast.show { transform: translateX(-50%) translateY(0); }
+.badge-row { display: flex; gap: 8px; flex-wrap: wrap; margin: 12px 0; }
+.badge { padding: 4px 12px; border-radius: 99px; font-size: .8em; font-weight: 600; }
+.badge.green { background: var(--textil-pastel); color: #4a6b1a; border: 1px solid var(--textil); }
+.badge.red { background: var(--mech-pastel); color: #8a1f1f; border: 1px solid var(--mech); }
+.badge.blue { background: var(--druck-pastel); color: #2a6a94; border: 1px solid var(--druck); }
+.badge.pink { background: var(--grafik-pastel); color: #7a1a55; border: 1px solid var(--grafik); }
+.badge.yellow { background: var(--laser-pastel); color: #9a6a1a; border: 1px solid var(--laser); }
+.completion { text-align: center; padding: 40px 20px; }
+.completion .emoji { font-size: 3em; margin-bottom: 16px; animation: bounce 1s ease infinite; }
+@keyframes bounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
+.completion h2 { font-size: 1.8em; margin-bottom: 12px; color: var(--text); }
+.completion p { color: var(--textdim); margin-bottom: 24px; }
+.completion .stats { display: flex; justify-content: center; gap: 24px; flex-wrap: wrap; margin-bottom: 24px; }
+.completion .stat {
+  background: var(--surface); border: 2px solid var(--surface2);
+  border-radius: 12px; padding: 16px 24px;
+  box-shadow: var(--shadow);
+  border-top: 4px solid var(--druck);
+}
+.completion .stat .num { font-size: 2em; font-weight: 700; color: var(--druck); }
+.completion .stat .label { font-size: .85em; color: var(--textdim); }
+.module-strip {
+  display: flex; gap: 4px; height: 6px; border-radius: 99px; overflow: hidden; margin: 8px 0 16px;
+}
+.module-strip > div { flex: 1; }
+@media (max-width: 640px) {
+  .dnd-area { grid-template-columns: 1fr; }
+  .header h1 { font-size: 1em; }
+  .card { padding: 18px; }
+}
+</style>
+</head>
+<body>
+<div class="header">
+  <span class="van">🚐</span>
+  <h1>Makermobil Team-Organisation</h1>
+  <div class="progress-bar-wrap"><div class="progress-bar" id="progressBar"></div></div>
+  <span class="progress-label" id="progressLabel">1 / 15</span>
+</div>
+<div class="lesson-nav" id="lessonNav"></div>
+<div class="main" id="main"></div>
+<div class="toast" id="toast"></div>
+<script>
+const lessons = [
+  {
+    icon: "📅", title: "Kalenderpflege",
+    theory: `<div class="card"><div class="module-strip"><div style="background:var(--druck)"></div><div style="background:var(--grafik)"></div><div style="background:var(--laser)"></div><div style="background:var(--mech)"></div><div style="background:var(--textil)"></div><div style="background:var(--studio)"></div></div><h2>📅 Lektion 1: Kalenderpflege makermobil@</h2><p>Im <strong>makermobil@ Kalender</strong> soll für alle sichtbar sein, was das Team Makermobil leistet.</p><table><tr><th>Was?</th><th style="text-align:center">Eintragen?</th></tr><tr><td>Persönliche Orga, Vorbereitung &amp; Bürozeit</td><td style="text-align:center">❌ Nein</td></tr><tr><td>Termine mit Internen (Team-Mitgliedern)</td><td style="text-align:center">✅ Ja</td></tr><tr><td>Termine mit Externen (Schulen, Partner)</td><td style="text-align:center">✅ Ja</td></tr><tr><td>Urlaub (zusätzlich in Stabstellen)</td><td style="text-align:center">✅ Ja</td></tr></table><h3>Sonderregelungen pro Person</h3><ul><li><strong>Alex:</strong> Mi–Fr dauerhafte Abwesenheit</li><li><strong>Matthias:</strong> Schulzeiten als "Matthias → Schule"</li><li><strong>Thorsten:</strong> Freitags Workshop = dauerhafte Abwesenheit</li><li><strong>Lien, Christian, Thorsten:</strong> Homeoffice als "Frei"</li><li><strong>Daniel / Sybille:</strong> Stiftungstermine, CampuStore, alles Makermobil-bezogene</li></ul><div class="callout info">💡 <strong>Für das bestehende Team:</strong> Prüft eure Kalendereinträge – sind alle externen und internen Termine sichtbar? Sind persönliche Orga-Zeiten entfernt?</div></div>`,
+    practice: `<div class="card"><h2>✍️ Praxisaufgabe 1: Kalendereintrag</h2><p><strong>Szenario:</strong> Du hast ein Vorbereitungstreffen mit Thorsten (intern) und einen Workshop mit einer externen Schule.</p><h3>Checkliste – Hast du alles richtig gemacht?</h3><div class="checklist" data-check><div class="check-item">Termin mit internem Teammitglied ist im Kalender sichtbar</div><div class="check-item">Externer Termin (Workshop mit Schule) ist im Kalender sichtbar</div><div class="check-item">Persönliche Vorbereitungszeit ist <strong>nicht</strong> im Kalender</div><div class="check-item">Homeoffice ist als "Frei" markiert</div></div></div><div class="quiz" data-quiz><div class="question">Welcher Termin gehört <strong>nicht</strong> in den makermobil@ Kalender?</div><div class="quiz-option" data-correct="false">📅 Vorbereitungstreffen mit Thorsten</div><div class="quiz-option" data-correct="false">🏫 Workshop mit externer Schule</div><div class="quiz-option" data-correct="true">🗂️ Persönliche Vorbereitungszeit (Bürozeit)</div><div class="quiz-option" data-correct="false">🏖️ Urlaub</div><div class="quiz-feedback"></div></div>`
+  },
+  {
+    icon: "🗂️", title: "Planner 2026",
+    theory: `<div class="card"><div class="module-strip"><div style="background:var(--druck)"></div><div style="background:var(--grafik)"></div><div style="background:var(--laser)"></div><div style="background:var(--mech)"></div><div style="background:var(--textil)"></div><div style="background:var(--studio)"></div></div><h2>🗂️ Lektion 2: Planner 2026</h2><ul><li>Neue Planner-Struktur = der <strong>3. Relaunch</strong> der Organisation</li><li>Alle Aufgaben aus dem alten "Planner 2026" wurden übernommen</li><li><strong>Jedes Thema hat einen eigenen Planner</strong></li><li>Alle Planner in der <strong>Seitenleiste</strong> sichtbar</li><li>Genutzt über MS Teams oder <strong>planner.microsoft.com</strong></li></ul><div class="callout tip">💡 Die genaue Nutzung der einzelnen Planner wird noch entwickelt.</div></div>`,
+    practice: `<div class="card"><h2>✍️ Praxisaufgabe 2: Überblick verschaffen &amp; anpinnen</h2><ol><li>Öffne MS Teams (Planner-App) oder <strong>planner.microsoft.com</strong></li><li>Verschaffe dir einen Überblick: Welche Planner gibt es?</li><li><strong>Pinne</strong> die Planner an, die für deine Arbeit wichtig sind</li><li>Schau dir 1–2 Planner genauer an: Aufbau, Kommentare</li></ol><div class="callout tip">💡 <strong>Optional:</strong> Schreibe bei einer Aufgabe als Kommentar deine Frage – so sieht das Team, dass etwas offen ist.</div><h3>Checkliste</h3><div class="checklist" data-check><div class="check-item">Ich habe mir alle Planner in der Seitenleiste angesehen</div><div class="check-item">Ich habe die für mich wichtigen Planner angepinnt</div><div class="check-item">Ich habe einen Überblick über die Themen-Struktur</div></div><div class="callout info">💡 <strong>Für das bestehende Team:</strong> Sind eure Planner angepinnt? Gibt es Aufgaben mit offenen Kommentaren?</div></div>`
+  },
+  {
+    icon: "💬", title: "Projektbüro",
+    theory: `<div class="card"><div class="module-strip"><div style="background:var(--druck)"></div><div style="background:var(--grafik)"></div><div style="background:var(--laser)"></div><div style="background:var(--mech)"></div><div style="background:var(--textil)"></div><div style="background:var(--studio)"></div></div><h2>💬 Lektion 3: Teams Team "Projektbüro"</h2><table><tr><th>Kanal</th><th>Zweck</th></tr><tr><td><strong>Allgemein</strong></td><td>Alle Dateien (unter "Freigegeben" nach Themen). Für Infos, Hinweise, Themen die Rückmeldung brauchen oder sich über längere Zeit entwickeln und <strong>nicht dringend</strong> sind</td></tr><tr><td><strong>Updates-Tagebuch</strong></td><td>Lien und Thorsten machen das Projekt wieder greifbar</td></tr></table><p>📁 <strong>Dateiablage:</strong> Im Kanal "Allgemein" unter "Freigegeben" → Ordner nach Themen</p><div class="callout info">💡 <strong>Für das bestehende Team:</strong> Checkt, ob eure Dateien in den richtigen Themenordnern liegen.</div></div>`,
+    practice: `<div class="card"><h2>✍️ Praxisaufgabe 3: Beitrag im Kanal posten</h2><p><strong>Szenario:</strong> Du möchtest etwas Spannendes aus deinem FSJ digital teilen – z. B. die Methodik des <strong>Zukunftsbriefes</strong> oder die AbendVA "Zocken".</p><ol><li>Schreibe einen kurzen, spannenden Beitrag im Kanal <strong>"Allgemein"</strong></li><li>Erkläre kurz, worum es geht und warum es für das Team interessant ist</li><li><strong>Fordere aktiv Feedback ein:</strong> Stelle am Ende eine konkrete Frage und bitte um Kommentare &amp; Likes</li></ol><div class="callout success">💡 <strong>Bonus:</strong> Lade optional eine Datei unter "Freigegeben" hoch.</div><div class="callout info">💡 <strong>Für das bestehende Team:</strong> Reagiert auf Julis Beitrag mit Kommentar oder Like!</div></div><div class="quiz" data-quiz><div class="question">Wohin postest du einen Beitrag, der nicht dringend ist, aber Feedback vom Team braucht?</div><div class="quiz-option" data-correct="false">💬 Chat Team Makermobil</div><div class="quiz-option" data-correct="true">📢 Kanal Allgemein (Projektbüro)</div><div class="quiz-option" data-correct="false">📓 Kanal Updates-Tagebuch</div><div class="quiz-option" data-correct="false">🏫 JF-Makermobil-Chat</div><div class="quiz-feedback"></div></div>`
+  },
+  {
+    icon: "🚐", title: "Makermobil",
+    theory: `<div class="card"><div class="module-strip"><div style="background:var(--druck)"></div><div style="background:var(--grafik)"></div><div style="background:var(--laser)"></div><div style="background:var(--mech)"></div><div style="background:var(--textil)"></div><div style="background:var(--studio)"></div></div><h2>🚐 Lektion 4: Teams Team "Makermobil"</h2><p><strong>Kanal "Allgemein":</strong> Thorsten postet dort und verteilt an alle Standorte.</p><h3>Standort-Kanäle</h3><table><tr><th>Kanal</th><th>Standort</th></tr><tr><td>MM-1-Weiß</td><td>Team Makermobil</td></tr><tr><td>MM-2-Blau</td><td>Emmendingen Neu</td></tr><tr><td>MM-3-Grün</td><td>Tuttlingen-Konstanz</td></tr><tr><td>MM-4-Gelb</td><td>Karlsruhe-Stadt</td></tr><tr><td>MM-5-Orange</td><td>Rhein-Neckar-Kreis</td></tr><tr><td>MM-6-Rot</td><td>Alb-Donau-Kreis / Lörrach</td></tr><tr><td>MM-7-Lila</td><td>Bodenseekreis</td></tr><tr><td>MM-8-Schwarz</td><td>Neckar-Odenwald</td></tr><tr><td>MM-Heidenheim</td><td>Heidenheim</td></tr></table><h3>LMZ-Kanäle (z.T. nur für berechtigte Personen)</h3><div class="badge-row"><span class="badge blue">LMZ-Kommunikation</span><span class="badge blue">LMZ-Makermobil Fuhrpark</span><span class="badge blue">LMZ-Vertrag &amp; Verwaltung</span><span class="badge blue">Makerteacher &amp; Makerassistent</span><span class="badge blue">MM Pilotjahr MZV</span></div><div class="callout warn">⚠️ <strong>Wichtig:</strong> Prüfen, ob alle Zugriff auf ihren Standort-Kanal haben!</div></div>`,
+    practice: `<div class="card"><h2>✍️ Praxisaufgabe 4: Richtigen Kanal wählen</h2><p><strong>Szenario:</strong> Du willst dich im Karlsruhe-Team kurz vorstellen.</p><div class="checklist" data-check><div class="check-item">Poste eine Vorstellung im Kanal "MM-4-Gelb Karlsruhe-Stadt"</div><div class="check-item">Prüfe, ob du Zugriff auf deinen Standort-Kanal hast</div></div><div class="callout info">💡 <strong>Für das bestehende Team:</strong> Prüft gegenseitig, ob alle Zugriff auf ihre Standort-Kanäle haben.</div></div><div class="quiz" data-quiz><div class="question">Eine Info betrifft nur Karlsruhe-Stadt. Wohin postest du?</div><div class="quiz-option" data-correct="false">Kanal Allgemein im Team Makermobil</div><div class="quiz-option" data-correct="true">Kanal MM-4-Gelb Karlsruhe-Stadt</div><div class="quiz-option" data-correct="false">Chat Team Makermobil</div><div class="quiz-option" data-correct="false">Kanal Updates-Tagebuch</div><div class="quiz-feedback"></div></div>`
+  },
+  {
+    icon: "⚡", title: "Chat vs. Kanal",
+    theory: `<div class="card"><div class="module-strip"><div style="background:var(--druck)"></div><div style="background:var(--grafik)"></div><div style="background:var(--laser)"></div><div style="background:var(--mech)"></div><div style="background:var(--textil)"></div><div style="background:var(--studio)"></div></div><h2>⚡ Lektion 5: Chat "Team Makermobil"</h2><h3>Der Chat ist der Ort für:</h3><div class="badge-row"><span class="badge green">✅ Schnelle, kurze Absprachen</span><span class="badge green">✅ Dringende Themen</span><span class="badge green">✅ Rund ums Makermobil</span></div><h3>Nicht in den Chat gehören:</h3><div class="badge-row"><span class="badge red">❌ Längerfristige Themen → Kanal "Allgemein"</span><span class="badge red">❌ Rückmeldungen nötig → Kanal "Allgemein"</span><span class="badge red">❌ JF-Kommunikation → JF-Makermobil-Chat</span></div><div class="callout info">📌 <strong>Tipp:</strong> Chat zu den Favoriten in der Seitenleiste hinzufügen!</div></div>`,
+    practice: `<div class="card"><h2>✍️ Praxisaufgabe 5: Chat anpinnen &amp; Kurzpost</h2><p><strong>Szenario:</strong> Du bist neu und willst dich kurz vorstellen – ohne Diskussion.</p><ol><li>Füge den Chat <strong>"Team Makermobil"</strong> zu deinen Favoriten hinzu</li><li>Poste: <em>"Hi, ich bin Juli, mach FSJ digital hier. Freut mich! 👋"</em></li><li>Bewusst kurz, keine Frage am Ende → kein Gespräch starten</li></ol><div class="checklist" data-check><div class="check-item">Chat "Team Makermobil" ist in den Favoriten</div><div class="check-item">Post ist kurz und kommt ohne Diskussion aus</div><div class="check-item">Keine Frage gestellt, die eine Antwort erzwingt</div></div><div class="callout info">💡 <strong>Für das bestehende Team:</strong> Heißt Juli willkommen! 👋 Ist der Chat bei allen in den Favoriten?</div></div><div class="card"><h2>🎯 Drag &amp; Drop: Wohin gehört die Nachricht?</h2><p>Ziehe jede Nachricht an den richtigen Ort.</p><div class="dnd-area" id="dndArea5"><div class="dnd-items"><div class="dnd-item" draggable="true" data-correct="chat">"Bin heute 10 Min später, traffic!"</div><div class="dnd-item" draggable="true" data-correct="allgemein">"Feedback zur neuen Modul-Struktur bis nächste Woche"</div><div class="dnd-item" draggable="true" data-correct="jf">"Wie war der JF gestern?"</div><div class="dnd-item" draggable="true" data-correct="chat">"Kann jemand kurz das Material im Fahrzeug checken?"</div></div><div class="dnd-targets"><div class="dnd-target" data-accept="chat"><span class="label">⚡ Chat Team Makermobil</span><div class="items"></div></div><div class="dnd-target" data-accept="allgemein"><span class="label">📢 Kanal Allgemein (Projektbüro)</span><div class="items"></div></div><div class="dnd-target" data-accept="jf"><span class="label">🏫 JF-Makermobil-Chat</span><div class="items"></div></div></div><button class="dnd-check-btn" onclick="checkDnd('dndArea5')">Antworten prüfen</button></div></div>`
+  },
+  {
+    icon: "📓", title: "OneNote & Passwörter",
+    theory: `<div class="card"><div class="module-strip"><div style="background:var(--druck)"></div><div style="background:var(--grafik)"></div><div style="background:var(--laser)"></div><div style="background:var(--mech)"></div><div style="background:var(--textil)"></div><div style="background:var(--studio)"></div></div><h2>📓 Lektion 6: OneNote Notizbuch</h2><h3>Gemeinsamer Abschnitt "Projektbüro OneNote"</h3><table><tr><th>Abschnittsgruppe</th><th>Inhalt</th></tr><tr><td><strong>Fahrzeug</strong></td><td>Weitere Abschnitte zum Fahrzeug</td></tr><tr><td><strong>Module</strong></td><td>Weitere Abschnitte zu den Modulen</td></tr></table><h3>Persönliche Bereiche</h3><ul><li>Jedes Teammitglied hat einen eigenen Bereich</li><li>Für alle einsehbar</li><li>Nur von der jeweiligen Person bearbeitet</li></ul></div>`,
+    practice: `<div class="card"><h2>✍️ Praxisaufgabe 6: Eintrag im richtigen Abschnitt</h2><ol><li>Trage ein Fahrzeug-Problem in die Abschnittsgruppe <strong>"Fahrzeug"</strong> ein</li><li>Lege persönliche To-dos in <strong>deinem eigenen Bereich</strong> an</li><li>Schau dir den Bereich <strong>"Passwörter oder Accounts"</strong> an</li></ol><div class="callout warn"><h3 style="color:var(--mech);margin-top:0">⚠️ ACHTUNG – Hoher Vertrauensbereich!</h3><ul style="margin-bottom:0"><li>Keiner darf Passwörter <strong>löschen oder ändern</strong> ohne vorherige Info ans Team</li><li>Beim <strong>Neu-Anlegen von Accounts</strong> müssen Zugangsdaten hier eingetragen werden</li><li>Behandle diese Infos mit höchster Vertraulichkeit</li></ul></div><div class="checklist" data-check><div class="check-item">Fahrzeug-Notiz in der Abschnittsgruppe "Fahrzeug"</div><div class="check-item">Persönliche To-dos im eigenen Bereich</div><div class="check-item">Passwörter-Bereich gefunden und Regeln verstanden</div><div class="check-item">Eigener Bereich ist für andere einsehbar geblieben</div></div><div class="callout info">💡 <strong>Für das bestehende Team:</strong> Sind alle aktuellen Accounts im Passwörter-Bereich eingetragen?</div></div>`
+  },
+  {
+    icon: "🕐", title: "Treffzeiten",
+    theory: `<div class="card"><div class="module-strip"><div style="background:var(--druck)"></div><div style="background:var(--grafik)"></div><div style="background:var(--laser)"></div><div style="background:var(--mech)"></div><div style="background:var(--textil)"></div><div style="background:var(--studio)"></div></div><h2>🕐 Lektion 7: Feste Treffzeiten</h2><table><tr><th>Wann</th><th>Was</th><th>Wer</th></tr><tr><td>Di &amp; Do</td><td>JF Makermobil</td><td>Sybille &amp; Daniel</td></tr><tr><td>Dienstag</td><td>JF Stabstelle MZV</td><td>MZV-Team</td></tr><tr><td>Täglich</td><td>Daily</td><td>MM Team + Anja (Koordinierungsstelle) &amp; Sybille (Stabstelle)</td></tr></table></div>`,
+    practice: `<div class="card"><h2>✍️ Praxisaufgabe 7: Treffzeiten synchronisieren</h2><ol><li>Nimm Kalendereinladungen an</li><li>Kenne die JF-Termine (Di &amp; Do)</li><li>Kenne den MZV-JF (Di)</li></ol><div class="checklist" data-check><div class="check-item">Daily-Termine im Kalender</div><div class="check-item">JF-Termine bekannt (Di &amp; Do)</div><div class="check-item">MZV-JF bekannt (Di)</div></div><div class="callout info">💡 <strong>Für das bestehende Team:</strong> Sind alle Treffzeiten aktuell? Gibt es Änderungen?</div></div>`
+  }
+];
+
+let currentSlide = 0;
+const totalSlides = lessons.length * 2 + 1;
+const quizResults = {};
+const checkResults = {};
+
+function renderLessonNav() {
+  document.getElementById('lessonNav').innerHTML = lessons.map((l, i) =>
+    '<div class="lesson-pill' + (i === 0 ? ' active' : '') + '" onclick="jumpToLesson(' + i + ')"><span class="num">' + (i+1) + '</span><span>' + l.icon + ' ' + l.title + '</span></div>'
+  ).join('');
+}
+
+function renderSlide() {
+  const main = document.getElementById('main');
+  const isCompletion = currentSlide === totalSlides - 1;
+  if (isCompletion) { renderCompletion(main); updateProgress(); return; }
+  const lessonIdx = Math.floor(currentSlide / 2);
+  const isPractice = currentSlide % 2 === 1;
+  const lesson = lessons[lessonIdx];
+  main.innerHTML = '<div class="slide active">' + (isPractice ? lesson.practice : lesson.theory) +
+    '<div class="nav-buttons"><button class="btn btn-prev" onclick="prevSlide()" ' + (currentSlide === 0 ? 'disabled' : '') + '>← Zurück</button>' +
+    '<button class="btn btn-next" onclick="nextSlide()">' + (isPractice && lessonIdx === lessons.length - 1 ? 'Abschluss →' : 'Weiter →') + '</button></div></div>';
+  initQuizzes(); initChecklists(); initDnd();
+  document.querySelectorAll('.lesson-pill').forEach((p, i) => {
+    p.classList.toggle('active', i === lessonIdx);
+  });
+  updateProgress();
+}
+
+function renderCompletion(main) {
+  const quizCount = Object.values(quizResults).filter(v => v).length;
+  const totalQuiz = Object.keys(quizResults).length || 1;
+  const checkedCount = Object.values(checkResults).flat().filter(v => v).length;
+  const totalChecks = Object.values(checkResults).flat().length;
+  main.innerHTML = '<div class="slide active"><div class="card completion"><div class="module-strip"><div style="background:var(--druck)"></div><div style="background:var(--grafik)"></div><div style="background:var(--laser)"></div><div style="background:var(--mech)"></div><div style="background:var(--textil)"></div><div style="background:var(--studio)"></div></div><div class="emoji">🎉</div><h2>Geschafft!</h2><p>Willkommen im Team, Juli! 🚐</p>' +
+    '<div class="stats"><div class="stat"><div class="num">' + quizCount + '/' + totalQuiz + '</div><div class="label">Quiz richtig</div></div>' +
+    '<div class="stat"><div class="num">' + checkedCount + '/' + totalChecks + '</div><div class="label">Checks erledigt</div></div>' +
+    '<div class="stat"><div class="num">' + lessons.length + '</div><div class="label">Lektionen</div></div></div>' +
+    '<h3>Abschluss-Check für Juli</h3><div class="checklist" data-check-final>' +
+    '<div class="check-item">Ich weiß, was in den makermobil@ Kalender gehört und was nicht</div>' +
+    '<div class="check-item">Ich kenne die Planner-Struktur und finde die richtigen Planner</div>' +
+    '<div class="check-item">Ich kenne die zwei Kanäle im Team "Projektbüro"</div>' +
+    '<div class="check-item">Ich kenne die Standort-Kanäle im Team "Makermobil"</div>' +
+    '<div class="check-item">Ich weiß, wann Chat vs. Kanal "Allgemein" genutzt wird</div>' +
+    '<div class="check-item">Ich kenne die OneNote-Struktur &amp; Passwort-Regeln</div>' +
+    '<div class="check-item">Ich kenne die festen Treffzeiten</div></div>' +
+    '<h3>Für das bestehende Team</h3><div class="checklist" data-check-team>' +
+    '<div class="check-item">Kalendereinträge sind aktuell und korrekt</div>' +
+    '<div class="check-item">Planner sind angepinnt</div>' +
+    '<div class="check-item">Dateien liegen in richtigen Ordnern</div>' +
+    '<div class="check-item">Alle haben Zugriff auf ihre Standort-Kanäle</div>' +
+    '<div class="check-item">Chat ist bei allen in den Favoriten</div>' +
+    '<div class="check-item">OneNote ist aktuell gepflegt</div>' +
+    '<div class="check-item">Treffzeiten sind allen bekannt</div></div>' +
+    '<div class="nav-buttons"><button class="btn btn-prev" onclick="prevSlide()">← Zurück</button>' +
+    '<button class="btn btn-next" onclick="currentSlide=0;renderSlide();">🔄 Neustart</button></div></div></div>';
+  initChecklists();
+}
+
+function nextSlide() { if (currentSlide < totalSlides - 1) { currentSlide++; renderSlide(); window.scrollTo({top:0,behavior:'smooth'}); } }
+function prevSlide() { if (currentSlide > 0) { currentSlide--; renderSlide(); window.scrollTo({top:0,behavior:'smooth'}); } }
+function jumpToLesson(idx) { currentSlide = idx * 2; renderSlide(); window.scrollTo({top:0,behavior:'smooth'}); }
+
+function updateProgress() {
+  const pct = (currentSlide / (totalSlides - 1)) * 100;
+  document.getElementById('progressBar').style.width = pct + '%';
+  document.getElementById('progressLabel').textContent = (currentSlide + 1) + ' / ' + totalSlides;
+}
+
+function initQuizzes() {
+  document.querySelectorAll('[data-quiz]').forEach(quiz => {
+    let answered = false;
+    const options = quiz.querySelectorAll('.quiz-option');
+    const feedback = quiz.querySelector('.quiz-feedback');
+    options.forEach(opt => {
+      opt.addEventListener('click', () => {
+        if (answered) return;
+        answered = true;
+        const isCorrect = opt.dataset.correct === 'true';
+        quizResults[currentSlide] = isCorrect;
+        options.forEach(o => {
+          if (o.dataset.correct === 'true') o.classList.add('correct');
+          else if (o === opt) o.classList.add('wrong');
+          o.style.pointerEvents = 'none';
+        });
+        feedback.className = 'quiz-feedback show ' + (isCorrect ? 'right' : 'wrong');
+        feedback.innerHTML = isCorrect ? '✅ Richtig! Gut gemacht.' : '❌ Nicht ganz. Die richtige Antwort ist grün markiert.';
+        if (isCorrect) showToast('Quiz gelöst! 🎉');
+      });
+    });
+  });
+}
+
+function initChecklists() {
+  document.querySelectorAll('[data-check],[data-check-final],[data-check-team]').forEach(list => {
+    const slideIdx = currentSlide;
+    if (!checkResults[slideIdx]) checkResults[slideIdx] = [];
+    list.querySelectorAll('.check-item').forEach((item, ii) => {
+      if (!checkResults[slideIdx][ii]) checkResults[slideIdx][ii] = false;
+      if (checkResults[slideIdx][ii]) item.classList.add('checked');
+      item.addEventListener('click', () => {
+        item.classList.toggle('checked');
+        checkResults[slideIdx][ii] = item.classList.contains('checked');
+        if (item.classList.contains('checked')) showToast('Erledigt! ✓');
+      });
+    });
+  });
+}
+
+function initDnd() {
+  document.querySelectorAll('.dnd-item').forEach(item => {
+    item.addEventListener('dragstart', e => { e.dataTransfer.setData('text', item.dataset.correct); item.classList.add('dragging'); });
+    item.addEventListener('dragend', () => item.classList.remove('dragging'));
+  });
+  document.querySelectorAll('.dnd-target').forEach(target => {
+    target.addEventListener('dragover', e => { e.preventDefault(); target.classList.add('over'); });
+    target.addEventListener('dragleave', () => target.classList.remove('over'));
+    target.addEventListener('drop', e => {
+      e.preventDefault(); target.classList.remove('over');
+      const dragging = document.querySelector('.dnd-item.dragging');
+      if (!dragging) return;
+      const placed = document.createElement('div');
+      placed.className = 'placed-item';
+      placed.textContent = dragging.textContent;
+      placed.dataset.correct = dragging.dataset.correct;
+      placed.dataset.target = target.dataset.accept;
+      placed.addEventListener('click', () => { placed.remove(); dragging.style.display = ''; });
+      target.querySelector('.items').appendChild(placed);
+      dragging.style.display = 'none';
+    });
+  });
+}
+
+function checkDnd(areaId) {
+  const area = document.getElementById(areaId);
+  const placed = area.querySelectorAll('.placed-item');
+  if (placed.length === 0) { showToast('Zuerst Nachrichten zuordnen! 👆'); return; }
+  let allCorrect = true;
+  placed.forEach(p => {
+    if (p.dataset.correct === p.dataset.target) { p.classList.add('correct'); p.classList.remove('wrong'); }
+    else { p.classList.add('wrong'); p.classList.remove('correct'); allCorrect = false; }
+  });
+  if (allCorrect) { showToast('Alle richtig! 🎉'); quizResults[currentSlide] = true; }
+  else showToast('Einige sind falsch – rot markiert');
+}
+
+let toastTimer;
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+renderLessonNav();
+renderSlide();
+</script>
+</body>
+</html>
