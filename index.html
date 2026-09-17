@@ -259,7 +259,7 @@ tr:nth-child(even) td { background: rgba(199,226,242,.2); }
   <span class="van">🚐</span>
   <h1>Makermobil Team-Organisation</h1>
   <div class="progress-bar-wrap"><div class="progress-bar" id="progressBar"></div></div>
-  <span class="progress-label" id="progressLabel">1 / 15</span>
+  <span class="progress-label" id="progressLabel">1 / 17</span>
 </div>
 <div class="lesson-nav" id="lessonNav"></div>
 <div class="main" id="main"></div>
@@ -300,6 +300,11 @@ const lessons = [
     icon: "🕐", title: "Treffzeiten",
     theory: `<div class="card"><div class="module-strip"><div style="background:var(--druck)"></div><div style="background:var(--grafik)"></div><div style="background:var(--laser)"></div><div style="background:var(--mech)"></div><div style="background:var(--textil)"></div><div style="background:var(--studio)"></div></div><h2>🕐 Lektion 7: Feste Treffzeiten</h2><table><tr><th>Wann</th><th>Was</th><th>Wer</th></tr><tr><td>Di &amp; Do</td><td>JF Makermobil</td><td>Sybille &amp; Daniel</td></tr><tr><td>Dienstag</td><td>JF Stabstelle MZV</td><td>MZV-Team</td></tr><tr><td>Täglich</td><td>Daily</td><td>MM Team + Anja (Koordinierungsstelle) &amp; Sybille (Stabstelle)</td></tr></table></div>`,
     practice: `<div class="card"><h2>✍️ Praxisaufgabe 7: Treffzeiten synchronisieren</h2><ol><li>Nimm Kalendereinladungen an</li><li>Kenne die JF-Termine (Di &amp; Do)</li><li>Kenne den MZV-JF (Di)</li></ol><div class="checklist" data-check><div class="check-item">Daily-Termine im Kalender</div><div class="check-item">JF-Termine bekannt (Di &amp; Do)</div><div class="check-item">MZV-JF bekannt (Di)</div></div><div class="callout info">💡 <strong>Für das bestehende Team:</strong> Sind alle Treffzeiten aktuell? Gibt es Änderungen?</div></div>`
+  },
+  {
+    icon: "🔗", title: "Kurzlink mz-bw.de",
+    theory: `<div class="card"><div class="module-strip"><div style="background:var(--druck)"></div><div style="background:var(--grafik)"></div><div style="background:var(--laser)"></div><div style="background:var(--mech)"></div><div style="background:var(--textil)"></div><div style="background:var(--studio)"></div></div><h2>🔗 Lektion 8: Kurzlink mit mz-bw.de erstellen</h2><p>Das Land Baden-Württemberg stellt den <strong>Linkshortener mz-bw.de</strong> bereit. Damit lassen sich lange URLs in kurze, merkbare Links umwandeln – z. B. für Materialien, Anmeldungen oder Projektseiten des Makermobils.</p><h3>Wo findest du die Zugangsdaten?</h3><ul><li>Im OneNote Notizbuch → Bereich <strong>"Passwörter oder Accounts"</strong></li><li>Dort sind alle Zugangsdaten des Teams hinterlegt</li></ul><div class="callout warn">⚠️ <strong>Regeln zum Passwörter-Bereich:</strong> Zugangsdaten nur verwenden, niemals ohne Info ans Team ändern oder löschen. Höchste Vertraulichkeit – niemals nach außen weitergeben.</div></div>`,
+    practice: `<div class="card"><h2>✍️ Praxisaufgabe 8: Kurzlink erstellen und teilen</h2><ol><li>Öffne das OneNote Notizbuch und suche im Bereich <strong>"Passwörter oder Accounts"</strong> die Zugangsdaten für <strong>mz-bw.de</strong></li><li>Logge dich auf <strong>mz-bw.de</strong> mit den Zugangsdaten ein</li><li>Erstelle einen Kurzlink – der Inhalt/das Ziel ist dir <strong>frei gestellt</strong></li><li>Teile den Kurzlink im Kanal <strong>"Allgemein"</strong> (Team "Projektbüro") und erwähne, dass dies eine <strong>Aufgabe deines Onboardings</strong> war</li></ol><div class="checklist" data-check><div class="check-item">Zugangsdaten im OneNote-Passwörter-Bereich gefunden</div><div class="check-item">Erfolgreich bei mz-bw.de eingeloggt</div><div class="check-item">Kurzlink erstellt</div><div class="check-item">Link im Kanal "Allgemein" geteilt</div><div class="check-item">Im Post erwähnt, dass es eine Onboarding-Aufgabe war</div></div><div class="callout info">💡 <strong>Für das bestehende Team:</strong> Schaut euch Julis Kurzlink an! Sind die Zugangsdaten für mz-bw.de aktuell im OneNote hinterlegt?</div></div><div class="quiz" data-quiz><div class="question">Wo findest du die Zugangsdaten für mz-bw.de?</div><div class="quiz-option" data-correct="false">💬 Chat Team Makermobil</div><div class="quiz-option" data-correct="false">🗂️ Planner 2026</div><div class="quiz-option" data-correct="true">📓 OneNote → Bereich "Passwörter oder Accounts"</div><div class="quiz-option" data-correct="false">📧 Outlook-Postfach</div><div class="quiz-feedback"></div></div>`
   }
 ];
 
@@ -347,6 +352,7 @@ function renderCompletion(main) {
     '<div class="check-item">Ich kenne die Standort-Kanäle im Team "Makermobil"</div>' +
     '<div class="check-item">Ich weiß, wann Chat vs. Kanal "Allgemein" genutzt wird</div>' +
     '<div class="check-item">Ich kenne die OneNote-Struktur &amp; Passwort-Regeln</div>' +
+    '<div class="check-item">Ich kann einen Kurzlink über mz-bw.de erstellen</div>' +
     '<div class="check-item">Ich kenne die festen Treffzeiten</div></div>' +
     '<h3>Für das bestehende Team</h3><div class="checklist" data-check-team>' +
     '<div class="check-item">Kalendereinträge sind aktuell und korrekt</div>' +
@@ -355,6 +361,7 @@ function renderCompletion(main) {
     '<div class="check-item">Alle haben Zugriff auf ihre Standort-Kanäle</div>' +
     '<div class="check-item">Chat ist bei allen in den Favoriten</div>' +
     '<div class="check-item">OneNote ist aktuell gepflegt</div>' +
+    '<div class="check-item">Zugangsdaten (z. B. mz-bw.de) sind im Passwörter-Bereich aktuell</div>' +
     '<div class="check-item">Treffzeiten sind allen bekannt</div></div>' +
     '<div class="nav-buttons"><button class="btn btn-prev" onclick="prevSlide()">← Zurück</button>' +
     '<button class="btn btn-next" onclick="currentSlide=0;renderSlide();">🔄 Neustart</button></div></div></div>';
